@@ -1,0 +1,9 @@
+department_id,faculty_id,department_code,department_name_en,status
+1,1,DEPT_101,Department of Economic Theory and Econometrics,1
+2,1,DEPT_102,Department of Applied Macroeconomics,1
+3,1,DEPT_103,Department of Regional Economics and Demography,1
+4,2,DEPT_201,Department of Corporate Finance and Securities,1
+5,2,DEPT_202,Department of Banking and Monetary Policy,1
+6,2,DEPT_203,Department of Taxation and Public Finance,1
+7,3,DEPT_301,Department of Financial Accounting,1
+8,3,DEPT_302,Department of Managerial Accounting and Audit,1

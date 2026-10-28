@@ -1,0 +1,82 @@
+target_table,target_column,source_table,source_column,data_type_transformation,value_mapping_rule,privacy_filter_rule,provenance_classification
+faculties.csv,faculty_id,fakultet,id,INTEGER -> INTEGER,Surrogate integer key mapped deterministically,None (Public),DERIVED_FROM_OBSERVED
+faculties.csv,faculty_code,fakultet,id,INTEGER -> VARCHAR(16),CONCAT('FAC_', LPAD(id, 2, '0')),None (Public),DERIVED_FROM_OBSERVED
+faculties.csv,faculty_name_en,fakultet,name,VARCHAR -> VARCHAR(128),Standardized English academic faculty name,None (Public institutional unit),DERIVED_FROM_OBSERVED
+faculties.csv,status,fakultet,id (derived),INTEGER -> INTEGER,Active status indicator (1 if active),None (Public),OBSERVED
+departments.csv,department_id,kafedra,id,INTEGER -> INTEGER,Surrogate integer key mapped deterministically,None (Public),DERIVED_FROM_OBSERVED
+departments.csv,faculty_id,kafedra,fak_id,INTEGER -> INTEGER,Foreign key to parent faculty,None (Public),DERIVED_FROM_OBSERVED
+departments.csv,department_code,kafedra,id,INTEGER -> VARCHAR(16),CONCAT('DEPT_', LPAD(id, 2, '0')),None (Public),DERIVED_FROM_OBSERVED
+departments.csv,department_name_en,kafedra,name,VARCHAR -> VARCHAR(128),Standardized English academic department name,None (Public institutional unit),DERIVED_FROM_OBSERVED
+departments.csv,status,kafedra,is_blocked,INTEGER -> INTEGER,CASE WHEN is_blocked = 1 THEN 0 ELSE 1 END,None (Public),OBSERVED
+curricula.csv,curriculum_id,yunalish,id,INTEGER -> INTEGER,Surrogate integer key mapped deterministically,None (Public),DERIVED_FROM_OBSERVED
+curricula.csv,department_id,yunalish,kaf_id,INTEGER -> INTEGER,Foreign key to managing department,None (Public),DERIVED_FROM_OBSERVED
+curricula.csv,curriculum_code,yunalish,id,INTEGER -> VARCHAR(32),CONCAT('CUR_', LPAD(id, 4, '0')),National code generalized to surrogate token to protect institutional curriculum blueprint,GENERALIZED
+curricula.csv,degree_level,yunalish,daraja,INTEGER/VARCHAR -> VARCHAR(16),CASE WHEN daraja = '1' OR daraja = 1 THEN 'BACHELOR' WHEN daraja = '2' OR daraja = 2 THEN 'MASTER' ELSE 'OTHER' END,None (Public),DERIVED_FROM_OBSERVED
+curricula.csv,study_mode,yunalish,shakl,VARCHAR -> VARCHAR(16),Standardized category ('FULL_TIME', 'PART_TIME', 'EVENING', 'DISTANCE'),None (Public),DERIVED_FROM_OBSERVED
+curricula.csv,title_en,yunalish,name,VARCHAR -> VARCHAR(128),Standardized English degree program title,None (Public degree program),DERIVED_FROM_OBSERVED
+courses.csv,course_id,fan_blok,id,INTEGER -> INTEGER,Surrogate course catalog primary key,None (Public),DERIVED_FROM_OBSERVED
+courses.csv,curriculum_id,fan_blok,yunalish_id,INTEGER -> INTEGER,Foreign key to curricula.csv,None (Public),DERIVED_FROM_OBSERVED
+courses.csv,department_id,fan_soat,kafedra,INTEGER -> INTEGER,Responsible teaching department ID,None (Public),DERIVED_FROM_OBSERVED
+courses.csv,course_block_id,fan_blok,blok,INTEGER -> INTEGER,Curriculum block code,None (Public),OBSERVED
+courses.csv,academic_year,fan_blok,date,VARCHAR -> VARCHAR(9),CASE WHEN date = '2026' THEN '2026-2027' ELSE date END,None (Public academic year),DERIVED_FROM_OBSERVED
+courses.csv,semester,fan_blok,semestr,INTEGER -> INTEGER,Direct semester number,None (Public),OBSERVED
+courses.csv,study_year,fan_blok,semestr,INTEGER -> INTEGER,CEIL(semestr / 2),None (Public),DERIVED_FROM_OBSERVED
+courses.csv,course_name_en,fan_blok,name,VARCHAR -> VARCHAR(128),Standardized English subject title,None (Public curriculum title),DERIVED_FROM_OBSERVED
+course_requirements.csv,requirement_id,fan_soat,id,INTEGER -> INTEGER,Surrogate requirement primary key,None (Public),DERIVED_FROM_OBSERVED
+course_requirements.csv,course_id,fan_soat,fan_id,INTEGER -> INTEGER,Foreign key to courses.csv (fan_blok.id),None (Public),DERIVED_FROM_OBSERVED
+course_requirements.csv,curriculum_id,fan_soat,yunalish_id,INTEGER -> INTEGER,Foreign key to curricula.csv,None (Public),DERIVED_FROM_OBSERVED
+course_requirements.csv,department_id,fan_soat,kafedra,INTEGER -> INTEGER,Responsible department ID,None (Public),DERIVED_FROM_OBSERVED
+course_requirements.csv,academic_year,fan_soat,date,VARCHAR -> VARCHAR(9),CASE WHEN date = '2026' THEN '2026-2027' ELSE date END,None (Public),DERIVED_FROM_OBSERVED
+course_requirements.csv,semester,fan_soat,smestr,INTEGER -> INTEGER,Instruction semester number,None (Public),OBSERVED
+course_requirements.csv,lecture_hours,fan_soat,maruza,DECIMAL -> DECIMAL(8,2),ROUND(CAST(maruza AS DECIMAL(8,2)), 2),None (Public),OBSERVED
+course_requirements.csv,practical_hours,fan_soat,amaliy,DECIMAL -> DECIMAL(8,2),ROUND(CAST(amaliy AS DECIMAL(8,2)), 2),None (Public),OBSERVED
+course_requirements.csv,lab_hours,fan_soat,tajriba,DECIMAL -> DECIMAL(8,2),ROUND(CAST(tajriba AS DECIMAL(8,2)), 2),None (Public),OBSERVED
+course_requirements.csv,seminar_hours,fan_soat,smenar,DECIMAL -> DECIMAL(8,2),ROUND(CAST(smenar AS DECIMAL(8,2)), 2),None (Public),OBSERVED
+course_requirements.csv,continuous_assessment_hours,fan_soat,reyting,DECIMAL -> DECIMAL(8,2),ROUND(CAST(reyting AS DECIMAL(8,2)), 2),None (Public),OBSERVED
+course_requirements.csv,total_teaching_hours,fan_soat,maruza + amaliy + tajriba + smenar,DECIMAL -> DECIMAL(8,2),Contact instructional hour sum,None (Public),DERIVED_FROM_OBSERVED
+faculty_staff.csv,appointment_id,hodimlar,id,INTEGER -> INTEGER,Surrogate appointment identifier,None (Surrogate contract key),DERIVED_FROM_OBSERVED
+faculty_staff.csv,person_pseudonym,hodimlar,jshir / id,VARCHAR -> VARCHAR(64),HMAC_SHA256(jshir, salt) with fallback to HMAC_SHA256(CONCAT('HODIM_', id), salt),PINFL / passport numbers completely purged; Salt kept strictly private outside dataset release packages,DERIVED_FROM_OBSERVED
+faculty_staff.csv,department_id,hodimlar,kafedra_id,INTEGER -> INTEGER,Affiliated teaching department,None (Public),DERIVED_FROM_OBSERVED
+faculty_staff.csv,employment_type,hodimlar,xodim_turi / shtat_turi,VARCHAR -> VARCHAR(32),Standardized appointment classification ('FULL_TIME', 'PART_TIME', 'HOURLY'),None (Standard category),DERIVED_FROM_OBSERVED
+faculty_staff.csv,fte_fraction,hodimlar,stavka,DECIMAL -> DECIMAL(4,2),ROUND(CAST(stavka AS DECIMAL(4,2)), 2),Review required for rare fractions,OBSERVED
+faculty_staff.csv,academic_rank,hodimlar,lavozim,VARCHAR -> VARCHAR(32),Mapped to standard ranks ('PROFESSOR', 'DOCENT', 'SENIOR_TEACHER', 'ASSISTANT', 'NONE'),Quasi-identifier generalized into 5 standard tiers,GENERALIZED
+faculty_staff.csv,academic_degree,hodimlar,lavozim / mutahasislik_id,VARCHAR -> VARCHAR(32),Derived degree ('DSC', 'PHD', 'NONE'),Quasi-identifier generalized into 3 standard tiers,GENERALIZED
+faculty_staff.csv,contract_teaching_quota,hodimlar,stavka / min_yuklama_soat,DECIMAL -> DECIMAL(8,2),ROUND(CAST(COALESCE(min_yuklama_soat, stavka * 800.0) AS DECIMAL(8,2)), 2),None (Regulatory capacity benchmark),DERIVED_FROM_OBSERVED
+faculty_staff.csv,linkage_confidence,hodimlar,jshir,VARCHAR -> VARCHAR(32),CASE WHEN jshir IS NOT NULL AND LENGTH(jshir) = 14 THEN 'VERIFIED_NATIONAL_ID' ELSE 'APPOINTMENT_ISOLATED' END,None (Provenance quality flag),DERIVED_FROM_OBSERVED
+student_groups.csv,group_id,gurux,id,INTEGER -> INTEGER,Surrogate student group key,None (Public),DERIVED_FROM_OBSERVED
+student_groups.csv,group_code,gurux,id,INTEGER -> VARCHAR(32),CONCAT('GRP_', LPAD(id, 4, '0')),Real cohort string suppressed to prevent direct student schedule correlation,DERIVED_FROM_OBSERVED
+student_groups.csv,curriculum_id,gurux,yunalish_id,INTEGER -> INTEGER,Foreign key to curricula.csv,None (Public),DERIVED_FROM_OBSERVED
+student_groups.csv,department_id,gurux,kaf_id,INTEGER -> INTEGER,Managing department ID,None (Public),DERIVED_FROM_OBSERVED
+student_groups.csv,study_year,gurux,name,INTEGER -> INTEGER,Extracted study progression year (1..6),None (Public),DERIVED_FROM_OBSERVED
+student_groups.csv,student_count,gurux,student_count,INTEGER -> INTEGER,Registered student headcount,Suppressed / binned to 5 if count < 5 to prevent small-cohort re-identification,GENERALIZED
+student_groups.csv,teaching_language,gurux,language,VARCHAR -> VARCHAR(16),Standardized language token ('UZB', 'RUS', 'ENG'),None (Public),OBSERVED
+student_groups.csv,study_mode,gurux,yunalish_id,VARCHAR -> VARCHAR(16),Mapped via yunalish.shakl,None (Public),DERIVED_FROM_OBSERVED
+lecture_streams.csv,stream_id,patok,id,INTEGER -> INTEGER,Surrogate stream identifier,None (Public),DERIVED_FROM_OBSERVED
+lecture_streams.csv,stream_name,patok,id,INTEGER -> VARCHAR(32),CONCAT('STR_', LPAD(id, 4, '0')),Real stream label suppressed,DERIVED_FROM_OBSERVED
+lecture_streams.csv,curriculum_id,patok,yunalish_id,INTEGER -> INTEGER,Primary curriculum track association,None (Public),DERIVED_FROM_OBSERVED
+lecture_streams.csv,department_id,patok,yunalish_id -> kafedra_id,INTEGER -> INTEGER,Managing department,None (Public),DERIVED_FROM_OBSERVED
+lecture_streams.csv,academic_year,patok,date,VARCHAR -> VARCHAR(9),CASE WHEN date = '2026' THEN '2026-2027' ELSE date END,None (Public),DERIVED_FROM_OBSERVED
+lecture_streams.csv,semester,patok,course,INTEGER -> INTEGER,Course semester mapping,None (Public),OBSERVED
+lecture_streams.csv,study_year,patok,course,INTEGER -> INTEGER,Study year progression,None (Public),OBSERVED
+stream_group_memberships.csv,membership_id,patok_groups,id,INTEGER -> INTEGER,Surrogate primary key,None (Public),DERIVED_FROM_OBSERVED
+stream_group_memberships.csv,stream_id,patok_groups,patok_id,INTEGER -> INTEGER,Foreign key to lecture_streams.csv,None (Public),DERIVED_FROM_OBSERVED
+stream_group_memberships.csv,group_id,patok_groups,group_id,INTEGER -> INTEGER,Foreign key to student_groups.csv,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,allocation_id,taqsimot,id,INTEGER -> INTEGER,Surrogate primary key,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,appointment_id,taqsimot,uquv_id,INTEGER -> INTEGER,CASE WHEN uquv_id IS NULL OR uquv_id = 0 THEN NULL ELSE uquv_id END,None (Foreign key to faculty_staff.csv appointment_id),DERIVED_FROM_OBSERVED
+workload_allocations.csv,assignment_status,taqsimot,uquv_id,VARCHAR -> VARCHAR(32),CASE WHEN uquv_id IS NULL OR uquv_id = 0 THEN 'UNASSIGNED_DEPARTMENT_POOL' ELSE 'ASSIGNED' END,None (Explicit unassigned workload classification),DERIVED_FROM_OBSERVED
+workload_allocations.csv,department_id,taqsimot,kafedra,INTEGER -> INTEGER,Foreign key to departments.csv,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,course_id,taqsimot,fan_id,INTEGER -> INTEGER,Foreign key to courses.csv (fan_blok.id),None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,requirement_id,taqsimot,fan_soat_id,INTEGER -> INTEGER,Foreign key to course_requirements.csv,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,stream_id,taqsimot,patok_id,INTEGER -> INTEGER,CASE WHEN patok_id = 0 OR patok_id IS NULL THEN NULL ELSE patok_id END,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,group_id,taqsimot,guruh_nomlari,INTEGER -> INTEGER,Extracted cohort group ID where activity is group-specific,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,activity_type,taqsimot,maruza / amaliy / tajriba / smenar / reyting,VARCHAR -> VARCHAR(32),Categorized activity ('LECTURE', 'PRACTICAL', 'LABORATORY', 'SEMINAR', 'ASSESSMENT', 'OTHER'),None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,allocated_hours,taqsimot,maruza * m_potok + amaliy * a_gurux + tajriba * t_gurux + smenar * s_gurux + reyting,DECIMAL -> DECIMAL(8,2),Sum of contact and continuous assessment hours assigned in this transaction,None (Public),OBSERVED
+workload_allocations.csv,academic_year,taqsimot,date,VARCHAR -> VARCHAR(9),CASE WHEN date = '2026' THEN '2026-2027' ELSE date END,None (Public),DERIVED_FROM_OBSERVED
+workload_allocations.csv,semester,taqsimot,smestr,INTEGER -> INTEGER,Instruction semester number,None (Public),OBSERVED
+workload_standards.csv,standard_id,Model Benchmark,N/A,INTEGER -> INTEGER,Sequential synthetic benchmark index (1..6),None (Illustrative benchmark),FULLY_SYNTHETIC
+workload_standards.csv,academic_rank,Model Benchmark,N/A,VARCHAR -> VARCHAR(32),Faculty rank category ('PROFESSOR', 'DOCENT', 'SENIOR_TEACHER', 'ASSISTANT', 'ALL_RANKS'),None (Illustrative benchmark),FULLY_SYNTHETIC
+workload_standards.csv,fte_fraction,Model Benchmark,N/A,DECIMAL -> DECIMAL(4,2),Benchmark FTE fraction (1.00, 0.50, 0.25),None (Illustrative benchmark),FULLY_SYNTHETIC
+workload_standards.csv,max_annual_hours,Model Benchmark,N/A,DECIMAL -> DECIMAL(8,2),Illustrative ceiling (850.00 * fte),None (Illustrative benchmark),FULLY_SYNTHETIC
+workload_standards.csv,min_annual_hours,Model Benchmark,N/A,DECIMAL -> DECIMAL(8,2),Illustrative floor (750.00 * fte),None (Illustrative benchmark),FULLY_SYNTHETIC
+workload_standards.csv,lecture_eligibility,Model Benchmark,N/A,BOOLEAN -> BOOLEAN,Illustrative eligibility policy,None (Illustrative benchmark),FULLY_SYNTHETIC
+workload_standards.csv,provenance_status,Model Benchmark,N/A,VARCHAR -> VARCHAR(32),'UNVERIFIED_BENCHMARK_PROPOSAL',None (Explicitly disclaiming statutory force),FULLY_SYNTHETIC

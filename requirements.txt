@@ -1,0 +1,6 @@
+# AFRT Academic Workload Dataset — Python Dependencies
+# The core validation and benchmark suite uses Python 3.8+ standard libraries.
+# Optional dependencies for extended data analysis:
+
+jsonschema>=4.0.0
+pytest>=7.0.0

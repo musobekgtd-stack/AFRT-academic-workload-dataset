@@ -1,0 +1,82 @@
+table_name,field_name,provenance_classification,source_entity,transformation_applied,privacy_risk_mitigation,scientific_utility
+faculties.csv,faculty_id,DERIVED_FROM_OBSERVED,fakultet.id,Deterministic surrogate integer mapping,Prevents exposing internal sequence identifiers,Preserves organizational hierarchy
+faculties.csv,faculty_code,DERIVED_FROM_OBSERVED,fakultet.id,Formally formatted prefix CONCAT('FAC_', LPAD(id, 2, '0')),Standardizes faculty identifiers,Enables relational join indexing
+faculties.csv,faculty_name_en,DERIVED_FROM_OBSERVED,fakultet.name,Standardized English academic translation,Removes vernacular administrative notes,Enables international research bibliometrics
+faculties.csv,status,OBSERVED,fakultet.id (active check),Direct status flag (1=active),None required,Filters active faculties
+departments.csv,department_id,DERIVED_FROM_OBSERVED,kafedra.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+departments.csv,faculty_id,DERIVED_FROM_OBSERVED,kafedra.fak_id,Foreign key mapping to faculties.csv,Consistent surrogate key reference,Maintains institutional hierarchy
+departments.csv,department_code,DERIVED_FROM_OBSERVED,kafedra.id,Prefix formatting CONCAT('DEPT_', LPAD(id, 2, '0')),Standardizes code format,Enables programmatic referencing
+departments.csv,department_name_en,DERIVED_FROM_OBSERVED,kafedra.name,Standardized English translation of academic department,Removes local vernacular administrative identifiers,Allows discipline-level benchmarking
+departments.csv,status,OBSERVED,kafedra.is_blocked,Inverted boolean flag (1=active, 0=blocked),None required,Preserves active teaching status
+curricula.csv,curriculum_id,DERIVED_FROM_OBSERVED,yunalish.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+curricula.csv,department_id,DERIVED_FROM_OBSERVED,yunalish.kaf_id,Foreign key mapping to departments.csv,Consistent surrogate key reference,Links programs to managing departments
+curricula.csv,curriculum_code,GENERALIZED,yunalish.id,Surrogate token formatting CONCAT('CUR_', LPAD(id, 4, '0')),Suppresses real national educational classifier code,Protects institutional degree blueprint while enabling program grouping
+curricula.csv,degree_level,DERIVED_FROM_OBSERVED,yunalish.daraja,Normalized to ISO academic tiers ('BACHELOR', 'MASTER', 'OTHER'),Standardizes classification,Enables educational level comparisons
+curricula.csv,study_mode,DERIVED_FROM_OBSERVED,yunalish.shakl,Standardized modality category ('FULL_TIME', 'PART_TIME', 'EVENING', 'DISTANCE'),None required,Distinguishes delivery modalities
+curricula.csv,title_en,DERIVED_FROM_OBSERVED,yunalish.name,Standardized English translation of curriculum program,Removes administrative notes,Enables subject area classification
+courses.csv,course_id,DERIVED_FROM_OBSERVED,fan_blok.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+courses.csv,curriculum_id,DERIVED_FROM_OBSERVED,fan_blok.yunalish_id,Foreign key mapping to curricula.csv,Consistent surrogate key reference,Associates courses with study programs
+courses.csv,department_id,DERIVED_FROM_OBSERVED,fan_soat.kafedra,Foreign key mapping to departments.csv,Consistent surrogate key reference,Associates courses with teaching departments
+courses.csv,course_block_id,OBSERVED,fan_blok.blok,Direct integer curriculum block identifier,None required,Preserves module structure
+courses.csv,academic_year,DERIVED_FROM_OBSERVED,fan_blok.date,Mapped from '2026' to canonical label '2026-2027',Removes ambiguity of calendar year vs academic year,Enforces temporal consistency
+courses.csv,semester,OBSERVED,fan_blok.semestr,Direct sequence semester number,None required,Enables progression modeling
+courses.csv,study_year,DERIVED_FROM_OBSERVED,fan_blok.semestr,Derived progression year CEIL(semestr / 2),None required,Allows cohort grouping
+courses.csv,course_name_en,DERIVED_FROM_OBSERVED,fan_blok.name,Standardized English translation of course name,Removes local section labels,Allows international curriculum analysis
+course_requirements.csv,requirement_id,DERIVED_FROM_OBSERVED,fan_soat.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+course_requirements.csv,course_id,DERIVED_FROM_OBSERVED,fan_soat.fan_id,Foreign key mapping to courses.csv,Consistent surrogate key reference,Associates demand with course offering
+course_requirements.csv,curriculum_id,DERIVED_FROM_OBSERVED,fan_soat.yunalish_id,Foreign key mapping to curricula.csv,Consistent surrogate key reference,Associates demand with program
+course_requirements.csv,department_id,DERIVED_FROM_OBSERVED,fan_soat.kafedra,Foreign key mapping to departments.csv,Consistent surrogate key reference,Associates demand with department
+course_requirements.csv,academic_year,DERIVED_FROM_OBSERVED,fan_soat.date,Mapped from '2026' to '2026-2027',Standardizes academic cycle,Enforces temporal consistency
+course_requirements.csv,semester,OBSERVED,fan_soat.smestr,Direct semester sequence,None required,Enables seasonal workload analysis
+course_requirements.csv,lecture_hours,OBSERVED,fan_soat.maruza,Direct planned lecture contact hours,None required,Measures direct instructional demand
+course_requirements.csv,practical_hours,OBSERVED,fan_soat.amaliy,Direct planned practical contact hours,None required,Measures tutorial contact demand
+course_requirements.csv,lab_hours,OBSERVED,fan_soat.tajriba,Direct planned laboratory contact hours,None required,Measures laboratory contact demand
+course_requirements.csv,seminar_hours,OBSERVED,fan_soat.smenar,Direct planned seminar contact hours,None required,Measures seminar contact demand
+course_requirements.csv,continuous_assessment_hours,OBSERVED,fan_soat.reyting,Direct continuous assessment/rating hours,None required,Measures evaluation workload
+course_requirements.csv,total_teaching_hours,DERIVED_FROM_OBSERVED,fan_soat,Sum of contact components (maruza + amaliy + tajriba + smenar),None required,Validates curriculum contact sum
+faculty_staff.csv,appointment_id,DERIVED_FROM_OBSERVED,hodimlar.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+faculty_staff.csv,person_pseudonym,DERIVED_FROM_OBSERVED,hodimlar.jshir / id,HMAC-SHA256 keyed token using private salt outside release,Completely purges PINFL national ID and names; irreversible pseudonymization,Allows longitudinal person tracking across appointments without re-identification
+faculty_staff.csv,department_id,DERIVED_FROM_OBSERVED,hodimlar.kafedra_id,Foreign key mapping to departments.csv,Consistent surrogate key reference,Associates staff with department
+faculty_staff.csv,employment_type,DERIVED_FROM_OBSERVED,hodimlar.xodim_turi,Standardized employment categories ('FULL_TIME', 'PART_TIME', 'HOURLY'),Categorizes appointment type,Allows labor modality analysis
+faculty_staff.csv,fte_fraction,OBSERVED,hodimlar.stavka,Direct employment contract fraction (0.25 to 1.50),Rare fractions reviewed for outlier suppression,Quantifies instructional capacity
+faculty_staff.csv,academic_rank,GENERALIZED,hodimlar.lavozim,Aggregated into 5 canonical tiers ('PROFESSOR', 'DOCENT', 'SENIOR_TEACHER', 'ASSISTANT', 'NONE'),Prevents narrow administrative title linking,Enables rank-based staffing modeling
+faculty_staff.csv,academic_degree,GENERALIZED,hodimlar.lavozim,Aggregated into 3 canonical tiers ('DSC', 'PHD', 'NONE'),Prevents specialty doctorate linkage,Enables qualification-level analysis
+faculty_staff.csv,contract_teaching_quota,DERIVED_FROM_OBSERVED,hodimlar.min_yuklama_soat / stavka,Statutory quota formula (min_yuklama_soat or stavka * 800.0),None required,Provides capacity baseline
+faculty_staff.csv,linkage_confidence,DERIVED_FROM_OBSERVED,hodimlar.jshir,Classification flag indicating whether pseudonym is backed by verified national ID or isolated contract,Transparency on pseudonym resolution,Informs researcher of linkage quality
+student_groups.csv,group_id,DERIVED_FROM_OBSERVED,gurux.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+student_groups.csv,group_code,DERIVED_FROM_OBSERVED,gurux.id,Formatted token CONCAT('GRP_', LPAD(id, 4, '0')),Suppresses real cohort name (e.g. 'I-86i/25') to prevent student schedule linkage,Maintains group identity
+student_groups.csv,curriculum_id,DERIVED_FROM_OBSERVED,gurux.yunalish_id,Foreign key mapping to curricula.csv,Consistent surrogate key reference,Associates cohort with program
+student_groups.csv,department_id,DERIVED_FROM_OBSERVED,gurux.kaf_id,Foreign key mapping to departments.csv,Consistent surrogate key reference,Associates cohort with managing department
+student_groups.csv,study_year,DERIVED_FROM_OBSERVED,gurux.name,Extracted study year (1..6),None required,Enables progression analysis
+student_groups.csv,student_count,GENERALIZED,gurux.student_count,Headcount binned or generalized to 5 if count < 5,Mitigates re-identification in micro-cohorts,Enables capacity utilization analytics
+student_groups.csv,teaching_language,OBSERVED,gurux.language,Standardized language token ('UZB', 'RUS', 'ENG'),None required,Enables language-segregated allocation analysis
+student_groups.csv,study_mode,DERIVED_FROM_OBSERVED,yunalish.shakl,Delivery format ('DAY', 'EVENING', 'DISTANCE'),None required,Distinguishes day vs evening cohorts
+lecture_streams.csv,stream_id,DERIVED_FROM_OBSERVED,patok.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+lecture_streams.csv,stream_name,DERIVED_FROM_OBSERVED,patok.id,Formatted token CONCAT('STR_', LPAD(id, 4, '0')),Suppresses real-world stream title,Preserves stream identity
+lecture_streams.csv,curriculum_id,DERIVED_FROM_OBSERVED,patok.yunalish_id,Foreign key mapping to curricula.csv,Consistent surrogate key reference,Associates stream with curriculum
+lecture_streams.csv,department_id,DERIVED_FROM_OBSERVED,patok (via curriculum),Managing department ID,Consistent surrogate key reference,Associates stream with department
+lecture_streams.csv,academic_year,DERIVED_FROM_OBSERVED,patok.date,Mapped from '2026' to '2026-2027',Standardizes academic cycle,Enforces temporal consistency
+lecture_streams.csv,semester,OBSERVED,patok.course,Semester sequence number,None required,Enables seasonal stream modeling
+lecture_streams.csv,study_year,OBSERVED,patok.course,Study year progression,None required,Enables cohort progression modeling
+stream_group_memberships.csv,membership_id,DERIVED_FROM_OBSERVED,patok_groups.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+stream_group_memberships.csv,stream_id,DERIVED_FROM_OBSERVED,patok_groups.patok_id,Foreign key mapping to lecture_streams.csv,Consistent surrogate key reference,Links group to lecture stream
+stream_group_memberships.csv,group_id,DERIVED_FROM_OBSERVED,patok_groups.group_id,Foreign key mapping to student_groups.csv,Consistent surrogate key reference,Links group to lecture stream
+workload_allocations.csv,allocation_id,DERIVED_FROM_OBSERVED,taqsimot.id,Deterministic surrogate integer mapping,Prevents internal ID disclosure,Enables primary key indexing
+workload_allocations.csv,appointment_id,DERIVED_FROM_OBSERVED,taqsimot.uquv_id,Foreign key mapping to faculty_staff.csv appointment_id (NULL if unassigned),None (Safe surrogate key link),Enables instructor workload aggregation
+workload_allocations.csv,assignment_status,DERIVED_FROM_OBSERVED,taqsimot.uquv_id,Categorized as 'ASSIGNED' or 'UNASSIGNED_DEPARTMENT_POOL',Explicitly marks open staffing requirements without leaking reasons,Crucial for teaching bottleneck analytics
+workload_allocations.csv,department_id,DERIVED_FROM_OBSERVED,taqsimot.kafedra,Foreign key mapping to departments.csv,Consistent surrogate key reference,Enables departmental workload aggregation
+workload_allocations.csv,course_id,DERIVED_FROM_OBSERVED,taqsimot.fan_id,Foreign key mapping to courses.csv,Consistent surrogate key reference,Links assignment to course catalog
+workload_allocations.csv,requirement_id,DERIVED_FROM_OBSERVED,taqsimot.fan_soat_id,Foreign key mapping to course_requirements.csv,Consistent surrogate key reference,Links assignment to statutory requirement
+workload_allocations.csv,stream_id,DERIVED_FROM_OBSERVED,taqsimot.patok_id,Foreign key mapping to lecture_streams.csv (NULL if group activity),None required,Links lecture assignment to stream
+workload_allocations.csv,group_id,DERIVED_FROM_OBSERVED,taqsimot.guruh_nomlari,Foreign key mapping to student_groups.csv (NULL if stream activity),None required,Links practical assignment to group
+workload_allocations.csv,activity_type,DERIVED_FROM_OBSERVED,taqsimot,Categorized activity ('LECTURE', 'PRACTICAL', 'LABORATORY', 'SEMINAR', 'ASSESSMENT', 'OTHER'),Standardizes instruction modality,Enables activity-based workload balancing
+workload_allocations.csv,allocated_hours,OBSERVED,taqsimot,Assigned instructional contact volume (calculated as hours * groups/streams),None required,Core empirical workload metric
+workload_allocations.csv,academic_year,DERIVED_FROM_OBSERVED,taqsimot.date,Mapped from '2026' to '2026-2027',Standardizes academic cycle,Enforces temporal consistency
+workload_allocations.csv,semester,OBSERVED,taqsimot.smestr,Instruction semester number,None required,Enables semester load balancing
+workload_standards.csv,standard_id,FULLY_SYNTHETIC,Model Benchmark,Generated integer sequence (1..6),Illustrative benchmark only,Enables capacity constraint benchmarking
+workload_standards.csv,academic_rank,FULLY_SYNTHETIC,Model Benchmark,Illustrative academic rank tier,None,Enables rank-based capacity constraints
+workload_standards.csv,fte_fraction,FULLY_SYNTHETIC,Model Benchmark,Illustrative FTE appointment fraction,None,Enables fractional appointment testing
+workload_standards.csv,max_annual_hours,FULLY_SYNTHETIC,Model Benchmark,Illustrative ceiling (850.00 * fte),None,Enables optimization upper bounds
+workload_standards.csv,min_annual_hours,FULLY_SYNTHETIC,Model Benchmark,Illustrative floor (750.00 * fte),None,Enables optimization lower bounds
+workload_standards.csv,lecture_eligibility,FULLY_SYNTHETIC,Model Benchmark,Illustrative rank eligibility rule,None,Enables policy constraint benchmarking
+workload_standards.csv,provenance_status,FULLY_SYNTHETIC,Model Benchmark,Explicitly labeled 'UNVERIFIED_BENCHMARK_PROPOSAL',Disclaims statutory force to avoid misleading legal claims,Clarifies heuristic benchmark nature

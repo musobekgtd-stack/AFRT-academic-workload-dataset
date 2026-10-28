@@ -1,0 +1,65 @@
+course_id,curriculum_id,department_id,course_block_id,academic_year,semester,study_year,course_name_en
+5001,101,1,1,2026-2027,1,1,Macroeconomics - Module 1
+5002,101,1,2,2026-2027,2,1,Econometrics - Module 2
+5003,101,1,3,2026-2027,1,2,Corporate Finance - Module 3
+5004,101,1,4,2026-2027,2,2,Commercial Banking - Module 4
+5005,102,1,1,2026-2027,1,1,Econometrics - Module 1
+5006,102,1,2,2026-2027,2,1,Corporate Finance - Module 2
+5007,102,1,3,2026-2027,1,2,Commercial Banking - Module 3
+5008,102,1,4,2026-2027,2,2,Financial Accounting - Module 4
+5009,103,2,1,2026-2027,1,1,Corporate Finance - Module 1
+5010,103,2,2,2026-2027,2,1,Commercial Banking - Module 2
+5011,103,2,3,2026-2027,1,2,Financial Accounting - Module 3
+5012,103,2,4,2026-2027,2,2,Managerial Accounting - Module 4
+5013,104,2,1,2026-2027,1,1,Commercial Banking - Module 1
+5014,104,2,2,2026-2027,2,1,Financial Accounting - Module 2
+5015,104,2,3,2026-2027,1,2,Managerial Accounting - Module 3
+5016,104,2,4,2026-2027,2,2,Auditing Standards - Module 4
+5017,105,3,1,2026-2027,1,1,Financial Accounting - Module 1
+5018,105,3,2,2026-2027,2,1,Managerial Accounting - Module 2
+5019,105,3,3,2026-2027,1,2,Auditing Standards - Module 3
+5020,105,3,4,2026-2027,2,2,Machine Learning - Module 4
+5021,106,3,1,2026-2027,1,1,Managerial Accounting - Module 1
+5022,106,3,2,2026-2027,2,1,Auditing Standards - Module 2
+5023,106,3,3,2026-2027,1,2,Machine Learning - Module 3
+5024,106,3,4,2026-2027,2,2,Database Systems and SQL - Module 4
+5025,107,4,1,2026-2027,1,1,Auditing Standards - Module 1
+5026,107,4,2,2026-2027,2,1,Machine Learning - Module 2
+5027,107,4,3,2026-2027,1,2,Database Systems and SQL - Module 3
+5028,107,4,4,2026-2027,2,2,Business Analytics - Module 4
+5029,108,4,1,2026-2027,1,1,Machine Learning - Module 1
+5030,108,4,2,2026-2027,2,1,Database Systems and SQL - Module 2
+5031,108,4,3,2026-2027,1,2,Business Analytics - Module 3
+5032,108,4,4,2026-2027,2,2,Strategic Management - Module 4
+5033,109,5,1,2026-2027,1,1,Database Systems and SQL - Module 1
+5034,109,5,2,2026-2027,2,1,Business Analytics - Module 2
+5035,109,5,3,2026-2027,1,2,Strategic Management - Module 3
+5036,109,5,4,2026-2027,2,2,Supply Chain Logistics - Module 4
+5037,110,5,1,2026-2027,1,1,Business Analytics - Module 1
+5038,110,5,2,2026-2027,2,1,Strategic Management - Module 2
+5039,110,5,3,2026-2027,1,2,Supply Chain Logistics - Module 3
+5040,110,5,4,2026-2027,2,2,Digital Marketing - Module 4
+5041,111,6,1,2026-2027,1,1,Strategic Management - Module 1
+5042,111,6,2,2026-2027,2,1,Supply Chain Logistics - Module 2
+5043,111,6,3,2026-2027,1,2,Digital Marketing - Module 3
+5044,111,6,4,2026-2027,2,2,International Trade - Module 4
+5045,112,6,1,2026-2027,1,1,Supply Chain Logistics - Module 1
+5046,112,6,2,2026-2027,2,1,Digital Marketing - Module 2
+5047,112,6,3,2026-2027,1,2,International Trade - Module 3
+5048,112,6,4,2026-2027,2,2,Economic Law and Governance - Module 4
+5049,113,7,1,2026-2027,1,1,Digital Marketing - Module 1
+5050,113,7,2,2026-2027,2,1,International Trade - Module 2
+5051,113,7,3,2026-2027,1,2,Economic Law and Governance - Module 3
+5052,113,7,4,2026-2027,2,2,Risk Compliance - Module 4
+5053,114,7,1,2026-2027,1,1,International Trade - Module 1
+5054,114,7,2,2026-2027,2,1,Economic Law and Governance - Module 2
+5055,114,7,3,2026-2027,1,2,Risk Compliance - Module 3
+5056,114,7,4,2026-2027,2,2,Public Budgeting - Module 4
+5057,115,8,1,2026-2027,1,1,Economic Law and Governance - Module 1
+5058,115,8,2,2026-2027,2,1,Risk Compliance - Module 2
+5059,115,8,3,2026-2027,1,2,Public Budgeting - Module 3
+5060,115,8,4,2026-2027,2,2,Operations Research - Module 4
+5061,116,8,1,2026-2027,1,1,Risk Compliance - Module 1
+5062,116,8,2,2026-2027,2,1,Public Budgeting - Module 2
+5063,116,8,3,2026-2027,1,2,Operations Research - Module 3
+5064,116,8,4,2026-2027,2,2,Financial Modeling - Module 4

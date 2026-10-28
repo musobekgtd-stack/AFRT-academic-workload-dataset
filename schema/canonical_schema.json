@@ -1,0 +1,198 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AFRT Canonical Research Dataset Schema (Phase 4B)",
+  "version": "1.1.0",
+  "academic_institution": "Tashkent State University of Economics (TSUE)",
+  "system": "Academic Activity Digitalization System (AFRT)",
+  "academic_cycle": "2026-2027",
+  "provenance_phase": "Phase 4B — Scientific Reconciliation & Release Candidate v1.1",
+  "tables": {
+    "faculties.csv": {
+      "description": "Organizational faculty divisions housing academic departments",
+      "primary_key": ["faculty_id"],
+      "foreign_keys": [],
+      "columns": {
+        "faculty_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "faculty_code": {"type": "string", "nullable": false, "pattern": "^FAC_[0-9]{2,3}$", "description": "Standardized canonical faculty identifier", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "faculty_name_en": {"type": "string", "nullable": false, "description": "English translated name of faculty", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "status": {"type": "integer", "nullable": false, "allowed_values": [0, 1], "description": "Active status indicator", "provenance_classification": "OBSERVED"}
+      }
+    },
+    "departments.csv": {
+      "description": "Academic teaching departments hosting faculty appointments and managing subjects",
+      "primary_key": ["department_id"],
+      "foreign_keys": [
+        {"column": "faculty_id", "references": "faculties.csv", "referenced_column": "faculty_id"}
+      ],
+      "columns": {
+        "department_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "faculty_id": {"type": "integer", "nullable": false, "description": "Parent faculty reference", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_code": {"type": "string", "nullable": false, "pattern": "^DEPT_[0-9]{2,3}$", "description": "Canonical department code", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_name_en": {"type": "string", "nullable": false, "description": "English translated name of department", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "status": {"type": "integer", "nullable": false, "allowed_values": [0, 1], "description": "Active status indicator", "provenance_classification": "OBSERVED"}
+      }
+    },
+    "curricula.csv": {
+      "description": "Academic degree programs and educational curriculum tracks",
+      "primary_key": ["curriculum_id"],
+      "foreign_keys": [
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id"}
+      ],
+      "columns": {
+        "curriculum_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": false, "description": "Owning academic department", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "curriculum_code": {"type": "string", "nullable": false, "description": "National educational classification code", "provenance_classification": "GENERALIZED"},
+        "degree_level": {"type": "string", "nullable": false, "allowed_values": ["BACHELOR", "MASTER", "OTHER"], "description": "Higher education qualification tier", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "study_mode": {"type": "string", "nullable": false, "allowed_values": ["FULL_TIME", "PART_TIME", "EVENING", "DISTANCE"], "description": "Mode of academic delivery", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "title_en": {"type": "string", "nullable": false, "description": "English translated title of program", "provenance_classification": "DERIVED_FROM_OBSERVED"}
+      }
+    },
+    "courses.csv": {
+      "description": "Pedagogical subjects and courses offered within the academic curriculum",
+      "primary_key": ["course_id"],
+      "foreign_keys": [
+        {"column": "curriculum_id", "references": "curricula.csv", "referenced_column": "curriculum_id", "nullable": true},
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id", "nullable": true}
+      ],
+      "columns": {
+        "course_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "curriculum_id": {"type": "integer", "nullable": true, "description": "Associated curriculum program", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": true, "description": "Responsible teaching department", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "course_block_id": {"type": "integer", "nullable": true, "description": "Curriculum module block code", "provenance_classification": "OBSERVED"},
+        "academic_year": {"type": "string", "nullable": false, "pattern": "^[0-9]{4}-[0-9]{4}$", "description": "Canonical academic year", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "semester": {"type": "integer", "nullable": true, "min": 1, "max": 12, "description": "Course sequence semester", "provenance_classification": "OBSERVED"},
+        "study_year": {"type": "integer", "nullable": true, "min": 1, "max": 6, "description": "Target cohort study year", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "course_name_en": {"type": "string", "nullable": false, "description": "Subject title in English", "provenance_classification": "DERIVED_FROM_OBSERVED"}
+      }
+    },
+    "course_requirements.csv": {
+      "description": "Prescribed curriculum contact hour requirements and examination overhead",
+      "primary_key": ["requirement_id"],
+      "foreign_keys": [
+        {"column": "course_id", "references": "courses.csv", "referenced_column": "course_id"},
+        {"column": "curriculum_id", "references": "curricula.csv", "referenced_column": "curriculum_id", "nullable": true},
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id", "nullable": true}
+      ],
+      "columns": {
+        "requirement_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "course_id": {"type": "integer", "nullable": false, "description": "Referenced course catalog record", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "curriculum_id": {"type": "integer", "nullable": true, "description": "Associated curriculum", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": true, "description": "Department responsible for requirements", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "academic_year": {"type": "string", "nullable": false, "pattern": "^[0-9]{4}-[0-9]{4}$", "description": "Academic cycle label", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "semester": {"type": "integer", "nullable": true, "min": 1, "max": 12, "description": "Instruction semester", "provenance_classification": "OBSERVED"},
+        "lecture_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Direct lecture contact hours", "provenance_classification": "OBSERVED"},
+        "practical_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Tutorial/practical contact hours", "provenance_classification": "OBSERVED"},
+        "lab_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Laboratory contact hours", "provenance_classification": "OBSERVED"},
+        "seminar_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Seminar contact hours", "provenance_classification": "OBSERVED"},
+        "continuous_assessment_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Continuous assessment/rating hours", "provenance_classification": "OBSERVED"},
+        "total_teaching_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Sum of contact teaching hours", "provenance_classification": "DERIVED_FROM_OBSERVED"}
+      }
+    },
+    "faculty_staff.csv": {
+      "description": "Faculty teaching appointments, capacities, and pseudonymized individual profiles",
+      "primary_key": ["appointment_id"],
+      "foreign_keys": [
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id"}
+      ],
+      "columns": {
+        "appointment_id": {"type": "integer", "nullable": false, "description": "Surrogate appointment contract identifier", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "person_pseudonym": {"type": "string", "nullable": false, "pattern": "^[a-f0-9]{64}$", "description": "HMAC-SHA256 keyed individual pseudonym (salt held privately outside release)", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": false, "description": "Affiliated academic department", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "employment_type": {"type": "string", "nullable": false, "allowed_values": ["FULL_TIME", "PART_TIME", "HOURLY"], "description": "Contractual employment modality", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "fte_fraction": {"type": "decimal", "nullable": false, "min": 0.01, "max": 2.00, "description": "Full-Time Equivalent appointment fraction", "provenance_classification": "OBSERVED"},
+        "academic_rank": {"type": "string", "nullable": false, "allowed_values": ["PROFESSOR", "DOCENT", "SENIOR_TEACHER", "ASSISTANT", "NONE"], "description": "Academic title classification", "provenance_classification": "GENERALIZED"},
+        "academic_degree": {"type": "string", "nullable": false, "allowed_values": ["DSC", "PHD", "NONE"], "description": "Doctoral research degree qualification", "provenance_classification": "GENERALIZED"},
+        "contract_teaching_quota": {"type": "decimal", "nullable": true, "min": 0.0, "unit": "academic_hours", "description": "Contractual teaching hour requirement", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "linkage_confidence": {"type": "string", "nullable": false, "allowed_values": ["VERIFIED_NATIONAL_ID", "INSTITUTIONAL_STAFF_CODE", "APPOINTMENT_ISOLATED"], "description": "Identity resolution provenance flag", "provenance_classification": "DERIVED_FROM_OBSERVED"}
+      }
+    },
+    "student_groups.csv": {
+      "description": "Student cohort class sections participating in tutorial and laboratory instruction",
+      "primary_key": ["group_id"],
+      "foreign_keys": [
+        {"column": "curriculum_id", "references": "curricula.csv", "referenced_column": "curriculum_id"},
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id", "nullable": true}
+      ],
+      "columns": {
+        "group_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "group_code": {"type": "string", "nullable": false, "pattern": "^GRP_[0-9]{4}$", "description": "Anonymized cohort section token", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "curriculum_id": {"type": "integer", "nullable": false, "description": "Curriculum track of cohort", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": true, "description": "Managing department", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "study_year": {"type": "integer", "nullable": true, "min": 1, "max": 6, "description": "Current student progression year", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "student_count": {"type": "integer", "nullable": false, "min": 0, "max": 150, "description": "Registered active student headcount (suppressed/generalized if < 5)", "provenance_classification": "GENERALIZED"},
+        "teaching_language": {"type": "string", "nullable": false, "allowed_values": ["UZB", "RUS", "ENG"], "description": "Instruction language", "provenance_classification": "OBSERVED"},
+        "study_mode": {"type": "string", "nullable": true, "allowed_values": ["DAY", "EVENING", "DISTANCE", "FULL_TIME", "PART_TIME"], "description": "Cohort delivery format", "provenance_classification": "DERIVED_FROM_OBSERVED"}
+      }
+    },
+    "lecture_streams.csv": {
+      "description": "Consolidated lecture streams combining multiple student cohort groups",
+      "primary_key": ["stream_id"],
+      "foreign_keys": [
+        {"column": "curriculum_id", "references": "curricula.csv", "referenced_column": "curriculum_id", "nullable": true},
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id", "nullable": true}
+      ],
+      "columns": {
+        "stream_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "stream_name": {"type": "string", "nullable": false, "pattern": "^STR_[0-9]{4}$", "description": "Anonymized stream identifier token", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "curriculum_id": {"type": "integer", "nullable": true, "description": "Primary curriculum association", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": true, "description": "Department managing the stream", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "academic_year": {"type": "string", "nullable": false, "pattern": "^[0-9]{4}-[0-9]{4}$", "description": "Academic cycle label", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "semester": {"type": "integer", "nullable": true, "min": 1, "max": 12, "description": "Instruction semester", "provenance_classification": "OBSERVED"},
+        "study_year": {"type": "integer", "nullable": true, "min": 1, "max": 6, "description": "Student cohort study year", "provenance_classification": "OBSERVED"}
+      }
+    },
+    "stream_group_memberships.csv": {
+      "description": "Associative mapping binding individual student groups into lecture streams",
+      "primary_key": ["membership_id"],
+      "foreign_keys": [
+        {"column": "stream_id", "references": "lecture_streams.csv", "referenced_column": "stream_id"},
+        {"column": "group_id", "references": "student_groups.csv", "referenced_column": "group_id"}
+      ],
+      "columns": {
+        "membership_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "stream_id": {"type": "integer", "nullable": false, "description": "Target lecture stream reference", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "group_id": {"type": "integer", "nullable": false, "description": "Member student cohort group reference", "provenance_classification": "DERIVED_FROM_OBSERVED"}
+      }
+    },
+    "workload_allocations.csv": {
+      "description": "Faculty teaching workload assignment transactions and unassigned departmental quotas",
+      "primary_key": ["allocation_id"],
+      "foreign_keys": [
+        {"column": "appointment_id", "references": "faculty_staff.csv", "referenced_column": "appointment_id", "nullable": true},
+        {"column": "department_id", "references": "departments.csv", "referenced_column": "department_id"},
+        {"column": "course_id", "references": "courses.csv", "referenced_column": "course_id"},
+        {"column": "requirement_id", "references": "course_requirements.csv", "referenced_column": "requirement_id", "nullable": true},
+        {"column": "stream_id", "references": "lecture_streams.csv", "referenced_column": "stream_id", "nullable": true},
+        {"column": "group_id", "references": "student_groups.csv", "referenced_column": "group_id", "nullable": true}
+      ],
+      "columns": {
+        "allocation_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "appointment_id": {"type": "integer", "nullable": true, "description": "Assigned faculty appointment contract (NULL if unassigned pool)", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "assignment_status": {"type": "string", "nullable": false, "allowed_values": ["ASSIGNED", "UNASSIGNED_DEPARTMENT_POOL"], "description": "Workload staffing assignment status", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "department_id": {"type": "integer", "nullable": false, "description": "Responsible teaching department", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "course_id": {"type": "integer", "nullable": false, "description": "Pedagogical subject offering", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "requirement_id": {"type": "integer", "nullable": true, "description": "Associated course requirement baseline", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "stream_id": {"type": "integer", "nullable": true, "description": "Associated lecture stream if lecture activity", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "group_id": {"type": "integer", "nullable": true, "description": "Associated student group if tutorial/lab activity", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "activity_type": {"type": "string", "nullable": false, "allowed_values": ["LECTURE", "PRACTICAL", "LABORATORY", "SEMINAR", "ASSESSMENT", "OTHER"], "description": "Pedagogical instruction activity category", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "allocated_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Assigned contact workload volume", "provenance_classification": "OBSERVED"},
+        "academic_year": {"type": "string", "nullable": false, "pattern": "^[0-9]{4}-[0-9]{4}$", "description": "Academic cycle label", "provenance_classification": "DERIVED_FROM_OBSERVED"},
+        "semester": {"type": "integer", "nullable": true, "min": 1, "max": 12, "description": "Instruction semester", "provenance_classification": "OBSERVED"}
+      }
+    },
+    "workload_standards.csv": {
+      "description": "Normative benchmark capacity constraints for operational modeling and algorithm comparison",
+      "primary_key": ["standard_id"],
+      "foreign_keys": [],
+      "columns": {
+        "standard_id": {"type": "integer", "nullable": false, "description": "Surrogate integer primary key", "provenance_classification": "FULLY_SYNTHETIC"},
+        "academic_rank": {"type": "string", "nullable": false, "allowed_values": ["PROFESSOR", "DOCENT", "SENIOR_TEACHER", "ASSISTANT", "ALL_RANKS"], "description": "Applicable faculty qualification rank", "provenance_classification": "FULLY_SYNTHETIC"},
+        "fte_fraction": {"type": "decimal", "nullable": false, "min": 0.10, "max": 1.00, "description": "Appointment scale fraction", "provenance_classification": "FULLY_SYNTHETIC"},
+        "max_annual_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Upper bound instructional teaching cap", "provenance_classification": "FULLY_SYNTHETIC"},
+        "min_annual_hours": {"type": "decimal", "nullable": false, "min": 0.0, "unit": "academic_hours", "description": "Lower bound instructional teaching threshold", "provenance_classification": "FULLY_SYNTHETIC"},
+        "lecture_eligibility": {"type": "boolean", "nullable": false, "description": "Policy eligibility flag to deliver mass lectures", "provenance_classification": "FULLY_SYNTHETIC"},
+        "provenance_status": {"type": "string", "nullable": false, "allowed_values": ["UNVERIFIED_BENCHMARK_PROPOSAL"], "description": "Formal legal/policy verification status", "provenance_classification": "FULLY_SYNTHETIC"}
+      }
+    }
+  }
+}

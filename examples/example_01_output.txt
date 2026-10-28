@@ -1,0 +1,27 @@
+===============================================================================================
+ AFRT RESEARCH DATASET — DEPARTMENTAL WORKLOAD DISTRIBUTION & BOTTLENECK ANALYSIS
+ Dataset Source: 04_DATA/synthetic_benchmark_v1.1/medium
+===============================================================================================
+Dept ID  Department Name                            Assigned (h)   Unassigned (h)   Bottleneck %
+-----------------------------------------------------------------------------------------------
+1        Department of Economic Theory and Econom      7637.00          703.00          8.43%
+2        Department of Applied Macroeconomics          7567.00          773.00          9.27%
+3        Department of Regional Economics and Dem      7669.00          671.00          8.05%
+4        Department of Corporate Finance and Secu      7811.00          529.00          6.34%
+5        Department of Banking and Monetary Polic      7729.00          611.00          7.33%
+6        Department of Taxation and Public Financ      7664.00          676.00          8.11%
+7        Department of Financial Accounting            7825.00          515.00          6.18%
+8        Department of Managerial Accounting and       7633.00          707.00          8.48%
+9        Department of International Financial Re      7640.00          700.00          8.39%
+10       Department of Applied Artificial Intelli      7575.00          765.00          9.17%
+11       Department of Information Systems and Cy      7755.00          585.00          7.01%
+12       Department of Business Analytics and Sof      7565.00          775.00          9.29%
+13       Department of International Management a      7991.00          349.00          4.18%
+14       Department of Marketing and Consumer Beh      7800.00          540.00          6.47%
+15       Department of Industrial Economics and E      7560.00          780.00          9.35%
+16       Department of Corporate Law and Governan      7775.00          565.00          6.77%
+17       Department of Economic Security and Publ      7353.00          987.00         11.83%
+18       Department of Strategic Planning and Inn      7724.00          616.00          7.39%
+-----------------------------------------------------------------------------------------------
+TOTAL    INSTITUTIONAL AGGREGATE                     138273.00        11847.00          7.89%
+===============================================================================================

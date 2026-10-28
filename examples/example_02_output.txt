@@ -1,0 +1,21 @@
+===================================================================================================================
+ AFRT RESEARCH DATASET — RELATIONAL LINEAGE & END-TO-END JOIN AUDIT
+ Source: 04_DATA/synthetic_benchmark_v1.1/medium (Displaying first 12 joined allocation transactions)
+===================================================================================================================
+Alloc ID   Curriculum             Course Name                  Type         Cohort/Stream    Staff Rank       Hours   
+-------------------------------------------------------------------------------------------------------------------
+6001       Bachelor in Economet   Macroeconomics - Module 1    LECTURE      STR_0701         PROFESSOR (FULL)  36.00h
+6002       Bachelor in Economet   Macroeconomics - Module 1    LECTURE      STR_0702         DOCENT (FULL)     36.00h
+6003       Bachelor in Economet   Macroeconomics - Module 1    LECTURE      STR_0703         DOCENT (FULL)     36.00h
+6004       Bachelor in Economet   Macroeconomics - Module 1    LECTURE      STR_0704         SENIOR_TEACHER (PART)  36.00h
+6005       Bachelor in Economet   Macroeconomics - Module 1    PRACTICAL    GRP_0301         [UNASSIGNED_POOL]  36.00h
+6006       Bachelor in Economet   Macroeconomics - Module 1    PRACTICAL    GRP_0302         SENIOR_TEACHER (PART)  36.00h
+6007       Bachelor in Economet   Macroeconomics - Module 1    PRACTICAL    GRP_0303         ASSISTANT (HOUR)  36.00h
+6008       Bachelor in Economet   Macroeconomics - Module 1    PRACTICAL    GRP_0304         PROFESSOR (FULL)  36.00h
+6009       Bachelor in Economet   Macroeconomics - Module 1    LABORATORY   GRP_0301         DOCENT (FULL)     18.00h
+6010       Bachelor in Economet   Macroeconomics - Module 1    LABORATORY   GRP_0302         DOCENT (FULL)     18.00h
+6011       Bachelor in Economet   Macroeconomics - Module 1    LABORATORY   GRP_0303         SENIOR_TEACHER (PART)  18.00h
+6012       Bachelor in Economet   Macroeconomics - Module 1    LABORATORY   GRP_0304         SENIOR_TEACHER (PART)  18.00h
+-------------------------------------------------------------------------------------------------------------------
+[SUCCESS] Multi-table relational joins executed across 11 tables with zero orphan references.
+===================================================================================================================
