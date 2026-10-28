@@ -3,13 +3,11 @@ message: "If you use this research code or relational schema in your academic re
 title: "AFRT: Academic Workload Allocation and Curriculum Planning Research Code and Benchmark Suite"
 version: 1.1.0
 date-released: "2026-10-28"
-doi: "DOI_PENDING"
+doi: "10.17632/ks24j3zgvs.1"
+url: "https://data.mendeley.com/datasets/ks24j3zgvs/1"
 authors:
-  - family-names: "[AUTHOR_1_FAMILY]"
-    given-names: "[AUTHOR_1_GIVEN]"
-    affiliation: "Tashkent State University of Economics, Tashkent, Uzbekistan"
-  - family-names: "[AUTHOR_2_FAMILY]"
-    given-names: "[AUTHOR_2_GIVEN]"
+  - family-names: "Raximbayev"
+    given-names: "Musobek"
     affiliation: "Tashkent State University of Economics, Tashkent, Uzbekistan"
 keywords:
   - "higher education management"

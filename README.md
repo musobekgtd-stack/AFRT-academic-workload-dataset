@@ -1,8 +1,7 @@
 # AFRT Academic Workload and Curriculum Planning Dataset Codebase
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![DOI](https://img.shields.io/badge/DOI-DOI__PENDING-lightgrey.svg)](https://data.mendeley.com/)
+[![DOI](https://img.shields.io/badge/DOI-10.17632%2Fks24j3zgvs.1-blue.svg)](https://data.mendeley.com/datasets/ks24j3zgvs/1)
 
 Reproducible schema, validation scripts, synthetic generator, and analytical examples for the **Academic Activity Digitalization System (AFRT)** dataset package prepared for submission to Elsevier's *Data in Brief*.
 
@@ -143,21 +142,23 @@ This codebase complies with strict academic data protection standards:
 
 ## 7. Citation & DOI Notice
 
-The primary dataset will be archived and assigned a permanent Digital Object Identifier (DOI) on **Mendeley Data** upon completion of peer review:
+The primary dataset is officially deposited on **Mendeley Data**:
 
-- **Dataset DOI:** `DOI_PENDING` (will be updated once published on Mendeley Data)
-- **Code Repository:** `https://github.com/musobekgtd-stack/AFRT-academic-workload-dataset`
+- **Dataset DOI:** [10.17632/ks24j3zgvs.1](https://data.mendeley.com/datasets/ks24j3zgvs/1)
+- **Mendeley Data URL:** [https://data.mendeley.com/datasets/ks24j3zgvs/1](https://data.mendeley.com/datasets/ks24j3zgvs/1)
+- **Code Repository:** [https://github.com/musobekgtd-stack/AFRT-academic-workload-dataset](https://github.com/musobekgtd-stack/AFRT-academic-workload-dataset)
 
 If you use this codebase or the associated dataset in your research, please cite:
 
 ```bibtex
-@dataset{afrt_workload_dataset_2026,
-  author       = {[AUTHOR_1] and [AUTHOR_2]},
-  title        = {Academic Activity Digitalization System (AFRT) Workload and Curriculum Planning Dataset},
+@dataset{raximbayev_afrt_2026,
+  author       = {Raximbayev, Musobek},
+  title        = {A reproducible synthetic relational dataset for academic workload allocation and curriculum planning},
   year         = {2026},
   publisher    = {Mendeley Data},
-  version      = {v1.1},
-  doi          = {DOI_PENDING}
+  version      = {v1},
+  doi          = {10.17632/ks24j3zgvs.1},
+  url          = {https://data.mendeley.com/datasets/ks24j3zgvs/1}
 }
 ```
 
